@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="app.controller.MainViewController">
+
+    <!-- ===================== TOOLBAR ===================== -->
+    <top>
+        <ToolBar fx:id="toolBar">
+            <Button fx:id="addBtn" text="Nouvelle candidature"/>
+            <Button fx:id="profilBtn" text="Profils"/>
+            <Button fx:id="statBtn" text="Rapport Stat"/>
+            <Button fx:id="dashBtn" text="Dashboard"/>
+            <Separator/>
+            <Label text="Filtre :"/>
+
+            <ChoiceBox fx:id="statutFilter"/>
+            <ChoiceBox fx:id="moisFilter"/>
+<!--            <CheckBox fx:id="pdfFilter" text="Avec PDF"/>-->
+<!--            <CheckBox fx:id="responseFilter" text="Avec réponse"/>-->
+
+            <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="250"/>
+
+            <ToggleButton fx:id="themeBtn" text="Mode Sombre"/>
+        </ToolBar>
+    </top>
+
+    <!-- ===================== CENTER ===================== -->
+    <center>
+        <SplitPane fx:id="splitPane" dividerPositions="0.55">
+            <!-- ===== TABLE ===== -->
+            <TableView fx:id="table" editable="true">
+
+                <columns>
+
+                    <TableColumn fx:id="colIndex"
+                                 text="N°"
+                                 prefWidth="25"
+                                 sortable="false"/>
+
+                    <TableColumn fx:id="colDate"
+                                 text="Date"
+                                 prefWidth="90"/>
+
+                    <TableColumn fx:id="colEntreprise"
+                                 text="Entreprise"/>
+
+                    <TableColumn fx:id="colPoste"
+                                 text="Poste"/>
+
+                    <TableColumn fx:id="colStatut"
+                                 text="Statut"
+                                 prefWidth="100"/>
+
+                    <TableColumn fx:id="colProfil"
+                                 text="Profil"/>
+
+                    <!--                    <TableColumn fx:id="colNotes"-->
+<!--                                 text="Notes"/>-->
+
+<!--                    <TableColumn fx:id="colRelance"-->
+<!--                                 text="Relance"/>-->
+
+<!--                    <TableColumn fx:id="colElapsed"-->
+<!--                                 text="Depuis envoi"-->
+<!--                                 prefWidth="90"/>-->
+
+                </columns>
+            </TableView>
+
+            <!-- ===== PDF VIEWER ===== -->
+            <VBox fx:id="pdfViewerContainer"/>
+        </SplitPane>
+    </center>
+
+</BorderPane>

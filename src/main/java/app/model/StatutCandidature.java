@@ -1,22 +1,30 @@
 package app.model;
 
-
 public enum StatutCandidature {
-
-    TOUTES("Toutes"),
     EN_ATTENTE("En attente"),
-    REFUS("Non retenu"),
-    ENTRETIEN("Entretien");
-
-    public String getLabel() {
-        return label;
-    }
+    NON_RETENU("Non retenu"),
+    RETENU("Retenu"),
+    ACCEPTE("Accepté");
 
     private final String label;
 
     StatutCandidature(String label) {
         this.label = label;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public static StatutCandidature fromLabel(String label) {
+        if (label == null) return EN_ATTENTE; // fallback
+        String clean = label.trim().toLowerCase().replace("_", " ");
+        for (StatutCandidature s : values()) {
+            if (s.label.toLowerCase().equals(clean)) return s;
+        }
+        throw new IllegalArgumentException("Statut inconnu : " + label);
+    }
+
 
     @Override
     public String toString() {

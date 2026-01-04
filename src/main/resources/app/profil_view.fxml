@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="app.controller.ProfilViewController">
+
+    <!-- ===== TOP TOOLBAR ===== -->
+    <top>
+        <ToolBar>
+            <Button fx:id="newProfilBtn" text="Nouveau profil"/>
+            <Button fx:id="editProfilBtn" text="Modifier" disable="true"/>
+            <Button fx:id="deleteProfilBtn" text="Supprimer" disable="true"/>
+        </ToolBar>
+    </top>
+
+    <!-- ===== CENTER ===== -->
+    <center>
+        <SplitPane dividerPositions="0.4">
+
+            <!-- ===== LISTE PROFILS ===== -->
+            <TableView fx:id="profilTable">
+                <columns>
+                    <TableColumn fx:id="colNom" text="Nom"/>
+                    <TableColumn fx:id="colDomaine" text="Domaine"/>
+                    <TableColumn fx:id="colNiveau" text="Niveau"/>
+                </columns>
+            </TableView>
+
+            <!-- ===== DETAIL PROFIL ===== -->
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                <Label text="Détails du profil"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+                <Label fx:id="lblNom"/>
+                <Label fx:id="lblDomaine"/>
+                <Label fx:id="lblNiveau"/>
+                <Label fx:id="lblCompetences"/>
+                <Label fx:id="lblMotsCles"/>
+
+                <Separator/>
+
+                <Label text="Candidatures associées"/>
+                <ListView fx:id="candidatureList"/>
+
+            </VBox>
+
+        </SplitPane>
+    </center>
+
+</BorderPane>

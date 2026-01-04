@@ -3,20 +3,23 @@ package app;
 import app.controller.MainController;
 import app.model.Candidature;
 import app.model.DocumentFile;
-import javafx.collections.FXCollections;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import lombok.Getter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -30,73 +33,63 @@ public class PdfViewerPane extends BorderPane {
     private Candidature currentCandidature;
 
     private final ImageView imageView = new ImageView();
-
-    public ListView<DocumentFile> getPdfListView() {
-        return pdfListView;
-    }
-
+    @Getter
     private final ListView<DocumentFile> pdfListView = new ListView<>();
 
     private int currentPage = 0;
     private int pageCount = 0;
 
+    private ObjectProperty<DocumentFile> selectedPdf = new SimpleObjectProperty<>();
+
+    public ObjectProperty<DocumentFile> selectedPdfProperty() {
+        return selectedPdf;
+    }
+
     public PdfViewerPane(List<DocumentFile> pdfList, MainController controller) {
         this.controller = controller;
-        imageView.fitWidthProperty().bind(widthProperty().subtract(20));
 
-        /* =========================
-           IMAGE VIEW (PDF)
-           ========================= */
+        // ========================= IMAGE VIEW =========================
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
         imageView.setCache(true);
-        setCenter(imageView);
+        imageView.fitWidthProperty().bind(widthProperty().subtract(20));
 
-// ScrollPane pour le PDF
         ScrollPane pdfScrollPane = new ScrollPane(imageView);
         pdfScrollPane.setFitToWidth(true);
         pdfScrollPane.setFitToHeight(true);
-        pdfScrollPane.setPannable(true); // permet de bouger le PDF avec la souris
+        pdfScrollPane.setPannable(true);
         setCenter(pdfScrollPane);
 
-
-
-
-
-        /* =========================
-           LISTE DES PDFs (TOP)
-           ========================= */
-        pdfListView.setPrefHeight(200); // hauteur lisible
+        // ========================= LISTE PDF =========================
+        pdfListView.setPrefHeight(200);
         pdfListView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(DocumentFile item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null
-                        ? null
-                        : item.getDateMail()
-                        + " | "
-                        + " - "
-                        + item.getNom());
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    String dateStr = item.getDateMail() != null
+                            ? item.getDateMail().toString()
+                            : "Date inconnue";
+                    setText(dateStr + " - " + item.getFichier().getFileName());
+                }
             }
         });
 
-        pdfListView.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((obs, old, doc) -> {
-                    if (doc != null) {
-                        currentDocumentFile = doc;
-                        currentPdfPath = doc.getFichier();
-                        currentPage = 0;
-                        openPdf(currentPdfPath);
-                    }
-                });
+        pdfListView.getSelectionModel().selectedItemProperty().addListener((obs, old, doc) -> {
+            if (doc != null) {
+                currentDocumentFile = doc;
+                currentPdfPath = doc.getFichier();
+                currentPage = 0;
+                openPdf(currentPdfPath);
+            }
+        });
 
         setTop(pdfListView);
         BorderPane.setMargin(pdfListView, new Insets(5));
 
-        /* =========================
-           NAVIGATION PAGES (BOTTOM)
-           ========================= */
+        // ========================= NAVIGATION =========================
         Button prev = new Button("Précédent");
         Button next = new Button("Suivant");
 
@@ -116,31 +109,24 @@ public class PdfViewerPane extends BorderPane {
 
         ToolBar toolbar = new ToolBar(prev, next);
         setBottom(toolbar);
+
+        if (pdfList != null) setPdfList(pdfList);
     }
 
-    /* =========================
-       MISE À JOUR LISTE PDF
-       ========================= */
-    public void setPdfList(List<DocumentFile> pdfList, Candidature c) {
-        currentCandidature = c;
-        closePdf();
-
-        pdfList.sort(Comparator.comparing(
-                DocumentFile::getDateMail,
-                Comparator.nullsLast(Comparator.naturalOrder())
-        ));
-
-        pdfListView.setItems(FXCollections.observableArrayList(pdfList));
-
-        if (!pdfList.isEmpty()) {
-            pdfListView.getSelectionModel().select(0);
-        }
+    public DocumentFile getSelectedPdf() {
+        return selectedPdf.get(); // selectedPdf est ton ObjectProperty<DocumentFile>
     }
 
-    /* =========================
-       OUVERTURE PDF
-       ========================= */
+    // ========================= SET LIST =========================
+    public void setPdfList(List<DocumentFile> list) {
+        pdfListView.getItems().setAll(list);
+    }
+
+
+    // ========================= OUVERTURE PDF =========================
     private synchronized void openPdf(Path path) {
+        if (path == null) return;
+
         currentPdfPath = path;
         currentPage = 0;
 
@@ -155,12 +141,10 @@ public class PdfViewerPane extends BorderPane {
         renderPage();
     }
 
-    /* =========================
-       RENDU PAGE (THREAD SAFE)
-       ========================= */
+
+    // ========================= RENDU PAGE =========================
     private void renderPage() {
-        if (currentPdfPath == null) return;
-        if (currentPage < 0 || currentPage >= pageCount) return;
+        if (currentPdfPath == null || currentPage < 0 || currentPage >= pageCount) return;
 
         long version = renderVersion.incrementAndGet();
 
@@ -177,7 +161,6 @@ public class PdfViewerPane extends BorderPane {
 
         task.setOnSucceeded(e -> {
             if (renderVersion.get() == version) {
-//                imageView.setFitWidth(getWidth() - 20);
                 imageView.setImage(task.getValue());
             }
         });
@@ -185,11 +168,22 @@ public class PdfViewerPane extends BorderPane {
         new Thread(task, "pdf-render-" + version).start();
     }
 
-    /* =========================
-       FERMETURE PDF
-       ========================= */
+
+    // ========================= FERMETURE PDF =========================
     private void closePdf() {
         renderVersion.incrementAndGet();
+        imageView.setImage(null);
+    }
+
+    public void selectPdf(DocumentFile doc) {
+        if (doc == null) return;
+        pdfListView.getSelectionModel().select(doc);
+        pdfListView.scrollTo(doc);
+        selectedPdf.set(doc);
+    }
+
+    public void clear() {
+        pdfListView.getItems().clear();
         imageView.setImage(null);
     }
 }

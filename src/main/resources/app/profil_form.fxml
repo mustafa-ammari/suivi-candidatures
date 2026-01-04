@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controller.ProfilFormController">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    <Label text="Nouveau Profil" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="tfNom" promptText="Nom du profil"/>
+
+    <HBox spacing="5">
+        <TextField fx:id="tfCV" promptText="CV" editable="false" HBox.hgrow="ALWAYS"/>
+        <Button text="Choisir CV" onAction="#onChooseCV"/>
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="tfLM" promptText="Lettre de motivation" editable="false" HBox.hgrow="ALWAYS"/>
+        <Button text="Choisir LM" onAction="#onChooseLM"/>
+    </HBox>
+
+    <TextField fx:id="tfDomaine" promptText="Domaine"/>
+    <TextField fx:id="tfNiveau" promptText="Niveau"/>
+    <TextField fx:id="tfCompetences" promptText="Compétences (virgule séparées)"/>
+    <TextField fx:id="tfMotsCles" promptText="Mots-clés (virgule séparés)"/>
+
+    <Button text="Enregistrer" onAction="#onSave"/>
+
+</VBox>

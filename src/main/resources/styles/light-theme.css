@@ -1,0 +1,20 @@
+.root {
+    -fx-base: #ffffff;
+    -fx-background: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3399ff; /* même bleu que light mode */
+    -fx-text-fill: white;           /* texte lisible sur le bleu */
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #3399ff;
+    -fx-text-fill: white;
+}
+
+
+.table-row-cell .table-cell.non-retenu {
+    -fx-text-fill: #d44444;
+}
