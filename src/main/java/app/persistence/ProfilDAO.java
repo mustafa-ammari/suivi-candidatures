@@ -53,7 +53,7 @@ public class ProfilDAO {
     public static List<String> findPostesByProfil(Profil profil) throws Exception {
         List<String> postes = new ArrayList<>();
 
-        String sql = "SELECT poste FROM candidature WHERE profil_id = ? ORDER BY date_envoi DESC";
+        String sql = "SELECT poste, entreprise FROM candidature WHERE profil_id = ? ORDER BY date_envoi DESC";
 
         try (Connection c = Database.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -62,7 +62,7 @@ public class ProfilDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    postes.add(rs.getString("poste"));
+                    postes.add(rs.getString("entreprise")  + "  -  " +   rs.getString("poste") );
                 }
             }
         }

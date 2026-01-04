@@ -37,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -129,9 +130,9 @@ public class MainViewController {
         initActions();
         initSelectionListener();
 
-        controller.getCandidatures().forEach(c ->
-                System.out.println(STR."\{c.getEntreprise()} -> \{c.getProfil() != null ? c.getProfil().getNom() : "AUCUN PROFIL"}")
-        );
+//        controller.getCandidatures().forEach(c ->
+//                System.out.println(STR."\{c.getEntreprise()} -> \{c.getProfil() != null ? c.getProfil().getNom() : "AUCUN PROFIL"}")
+//        );
 
         setupPdfViewerContextMenu();
 
@@ -440,7 +441,23 @@ public class MainViewController {
         for (int i = 1; i <= 12; i++) moisFilter.getItems().add(String.valueOf(i));
         moisFilter.setValue("Tous");
 
+        statutFilter.getItems().add(null); // pour correspondre à "Tous"
         statutFilter.getItems().addAll(StatutCandidature.values());
+        statutFilter.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(StatutCandidature s) {
+                return s == null ? "Tous" : s.getLabel();
+            }
+
+            @Override
+            public StatutCandidature fromString(String string) {
+                return Arrays.stream(StatutCandidature.values())
+                        .filter(st -> st.getLabel().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+        statutFilter.setValue(null); // sélection par défaut = Tous
 
         Runnable update = this::applyFilters;
 
@@ -494,9 +511,15 @@ public class MainViewController {
             stage.setScene(new Scene(loader.load()));
             stage.setTitle("Gestion des profils");
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setMinWidth(800);
-            stage.setMinHeight(500);
-            stage.showAndWait();
+
+            stage.setWidth(1600);
+            stage.setHeight(1000);
+            stage.setMinWidth(1200);
+            stage.setMinHeight(800);
+
+            stage.show();
+            Platform.runLater(stage::centerOnScreen);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -993,6 +1016,7 @@ public class MainViewController {
             });
         });
 
+
         listView.setContextMenu(new ContextMenu(importPdf, changeDate, deleteDoc));
         listView.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -1005,6 +1029,7 @@ public class MainViewController {
                 }
             }
         });
+        listView.setPrefHeight(100);
     }
 
     private void importPdf(Stage stage) {
@@ -1120,13 +1145,14 @@ public class MainViewController {
                 )) // Plus ancien en premier
                 .toList();
 
-        System.out.println("PDFs chargés pour " + c.getEntreprise() + " : " + pdfs.size());
+//        System.out.println("PDFs chargés pour " + c.getEntreprise() + " : " + pdfs.size());
 
-        c.getDocuments().forEach(d ->
-                System.out.println(
-                        System.identityHashCode(d) + " | " + d.getFichierPath()
-                )
-        );
+//        c.getDocuments().forEach(d ->
+//                System.out.println(
+//                        System.identityHashCode(d) + " | " + d.getFichierPath()
+//                )
+//        );
+
         // Mettre à jour la liste dans le viewer
         pdfViewerPane.setPdfList(pdfs);
 

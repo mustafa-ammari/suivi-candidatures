@@ -1,20 +1,113 @@
+/* ======================= */
+/* LIGHT THEME - AMELIORE  */
+/* ======================= */
+
 .root {
     -fx-base: #ffffff;
-    -fx-background: #ffffff;
+    -fx-background: #fdfdfd;
+    -fx-text-fill: #000000;
+    -fx-accent: #3399ff; /* bleu sélection */
+    -fx-control-inner-background: #ffffff;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: #e0e0e0;
+    -fx-table-header-border-color: #d0d0d0;
+}
+
+.table-row-cell {
+    -fx-text-fill: #000000;
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:selected,
+.table-row-cell:filled:selected {
+    -fx-background-color: #3399ff; /* bleu sélection */
+    -fx-text-fill: white;
+}
+
+.table-cell.non-retenu {
+    -fx-text-fill: #d44444;
+}
+
+/* ListView */
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-control-inner-background: #ffffff;
+}
+
+.list-cell {
+    -fx-text-fill: #000000;
+    -fx-background-color: transparent;
+}
+
+.list-cell:hover {
+    -fx-background-color: #e8f0ff;
+}
+
+/* Button */
+.button {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #c0c7ff;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #c7d4ff;
+}
+
+/* TextField & TextArea */
+.text-field, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-color: #c0c7ff;
+    -fx-prompt-text-fill: #888888;
+}
+
+/* ScrollBar */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: #f5f5f5;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c0c7ff;
+    -fx-background-radius: 6;
+}
+
+/* DialogPane */
+.dialog-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c0c7ff;
+}
+
+/* Label */
+.label {
     -fx-text-fill: #000000;
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #3399ff; /* même bleu que light mode */
-    -fx-text-fill: white;           /* texte lisible sur le bleu */
+/* Sélection des éléments ListView */
+.list-cell:filled:selected,
+.list-cell:selected:focused {
+    -fx-background-color: #3399ff; /* bleu pro, même que tes tables */
+    -fx-text-fill: white;           /* texte lisible */
 }
 
-.table-row-cell:filled:selected {
+/* Sélection des éléments ListView non-focus (au cas où tu cliques ailleurs) */
+.list-cell:selected {
     -fx-background-color: #3399ff;
     -fx-text-fill: white;
 }
 
-
-.table-row-cell .table-cell.non-retenu {
-    -fx-text-fill: #d44444;
+/* Éléments normaux */
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
 }

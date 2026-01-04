@@ -1,5 +1,6 @@
 package app;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -15,8 +16,10 @@ public class Application extends javafx.application.Application {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/light-theme.css")).toExternalForm());
 
         stage.setScene(scene);
-        stage.setTitle("Gestion des candidatures");
+        stage.setTitle("Suivi des candidatures");
         stage.show();
+        Platform.runLater(stage::centerOnScreen);
+
     }
 //    @Override
 //    public void start(Stage stage) throws IOException {
