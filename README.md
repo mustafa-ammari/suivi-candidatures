@@ -127,4 +127,13 @@ Mustafa Ammari
 
 ## Capture d’écran (optionnel)
 
-Vous pouvez ajouter ici des captures d’écran des vues principales (ex : dark/light theme, formulaire profil, suivi candidatures) pour rendre le README plus attractif.
+## Capture d’écran
+
+### Vue principale
+![Vue principale](src/main/resources/screenshots/suivi-candidatures-light.png)
+
+### Formulaire profil
+![Formulaire Profil](src/main/resources/screenshots/suivi-candidatures-dark.png)
+
+### Thème sombre
+![Thème sombre](src/main/resources/screenshots/suivi-candidatures-profil.png)
