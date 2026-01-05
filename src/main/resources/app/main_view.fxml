@@ -13,6 +13,7 @@
         <ToolBar fx:id="toolBar">
             <Button fx:id="addBtn" text="Nouvelle candidature"/>
             <Button fx:id="profilBtn" text="Profils"/>
+            <Button fx:id="rapportBtn" text="Rapport"/>
             <Button fx:id="statBtn" text="Rapport Stat"/>
             <Button fx:id="dashBtn" text="Dashboard"/>
             <Separator/>

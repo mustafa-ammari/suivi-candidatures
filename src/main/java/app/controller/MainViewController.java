@@ -58,8 +58,7 @@ import java.util.stream.Collectors;
 public class MainViewController {
 
     @FXML private TableView<Candidature> table;
-    @FXML
-    private BorderPane rootPane; // Assure-toi que c'est défini dans ton FXML
+    @FXML private BorderPane rootPane;
     @FXML private TableColumn<Candidature, Number> colIndex;
     @FXML private TableColumn<Candidature, LocalDate> colDate;
     @FXML private TableColumn<Candidature, String> colEntreprise;
@@ -82,9 +81,10 @@ public class MainViewController {
 
     @FXML private Button addBtn;
     @FXML public Button profilBtn;
-
+    @FXML public Button rapportBtn;
     @FXML private Button statBtn;
     @FXML private Button dashBtn;
+
     private MainController controller;
     private PdfViewerPane pdfViewerPane;
 
@@ -477,8 +477,8 @@ public class MainViewController {
                 throw new RuntimeException(ex);
             }
         });
-//        profilBtn.setOnAction(e -> openProfilForm());
         profilBtn.setOnAction(e -> openProfilManagement());
+        rapportBtn.setOnAction(e -> openRapportCandidatures());
         statBtn.setOnAction(e -> showStatWindow());
         dashBtn.setOnAction(e -> showDashboard());
         themeBtn.setOnAction(e -> {
@@ -486,7 +486,7 @@ public class MainViewController {
             boolean dark = themeBtn.isSelected();
             applyTheme(scene, dark);
         });
-        // Dans MainViewController, après initialize()
+
         Platform.runLater(() -> {
             if (table.getScene() != null) {
                 table.getScene().setOnKeyPressed(event -> {
@@ -525,32 +525,22 @@ public class MainViewController {
         }
     }
 
-
-    private void openProfilForm() {
+    private void openRapportCandidatures() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/profil_form.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/app/rapport_candidatures.fxml")
+            );
+            Stage stage = new Stage();
+            stage.setTitle("Rapport des candidatures");
+            stage.setScene(new Scene(loader.load(), 1400, 900));
+            stage.initModality(Modality.NONE);
 
-            Stage modal = new Stage();
-            modal.setScene(new Scene(loader.load()));
-            modal.setTitle("Nouveau Profil");
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setMinWidth(400);  // largeur minimale
-            modal.setMinHeight(450); // hauteur minimale
-
-            // passer le stage au controller
-            ProfilFormController controller = loader.getController();
-            controller.setStage(modal);
-
-            // Affiche le modal et attend fermeture
-            modal.showAndWait();
-
-            // Rafraîchir la ComboBox des profils après création
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            stage.show();
+            Platform.runLater(stage::centerOnScreen);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 
     private void deletePdf(Candidature c, DocumentFile doc) {
         try {

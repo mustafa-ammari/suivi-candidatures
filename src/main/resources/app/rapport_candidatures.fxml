@@ -1,14 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controller.RapportCandidaturesController">
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+    <!-- Barre supérieure -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" >
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Période :" />
+            <DatePicker fx:id="startDatePicker"/>
+            <Label text="→"/>
+            <DatePicker fx:id="endDatePicker"/>
+            <Button text="Afficher" onAction="#onFilter"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Exporter PDF" onAction="#onExportPdf"/>
+        </HBox>
+    </top>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+    <!-- Liste -->
+    <center>
+        <TableView fx:id="table" prefHeight="800">
+            <columns>
+                <TableColumn text="Date" fx:id="dateCol"/>
+                <TableColumn text="Entreprise" fx:id="entrepriseCol"/>
+                <TableColumn text="Poste" fx:id="posteCol"/>
+<!--                <TableColumn text="Statut" fx:id="statutCol"/>-->
+<!--                <TableColumn text="Profil" fx:id="profilCol"/>-->
+            </columns>
+        </TableView>
+    </center>
 
-</AnchorPane>
+</BorderPane>
