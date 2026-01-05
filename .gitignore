@@ -42,9 +42,12 @@ Thumbs.db
 
 # Bases de données locales
 *.db
+*.db2
 
 # Build Maven
 /target/
 
 # Logs
 *.log
+
+divers/
